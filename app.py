@@ -1,38 +1,24 @@
 """This is a simple Flask API app to serve plain text data from the BioStudies API"""
 
-
-import json
-import requests
-import datetime
 from flask import Flask, request
-
 
 def get_public_adfs_from_biostudies():
 
-    """Generate list of accession and title from querying the public BioStudies API"""
+    """Generate list of accession and title from querying the biostudies Array designs file"""
 
-    biostudies_base = "https://www.ebi.ac.uk/biostudies/api/v1/"
-    api_query = "search?collection=arrayexpress&type=array"
+    arrays_data_file = "/nfs/production/irene/ma/annotare/biostudies/arrayexpress-arrays.txt"
 
     adfs = {}
 
     try:
-        response = requests.get(biostudies_base + api_query)
-        data = json.loads(response.text)
-
-        total_hits = data.get("totalHits")
-        #total_hits = 300  # limit for testing
-        page_size = 100
-
-        if total_hits and page_size:
-            for i in range(1, int(int(total_hits) / int(page_size)) + 2):
-                r = requests.get(biostudies_base + api_query + f"&pageSize={page_size}&page={i}")
-                data = json.loads(r.text)
-                for adf in data.get("hits", []):
-                    adfs[adf["accession"]] = adf["title"]
-
+        with open(arrays_data_file, "r") as file:
+            for line in file:
+                tokens = line.strip().split("\t")
+                accession = tokens[0]
+                title = tokens[3]
+                adfs[accession] = title
     except Exception:
-        print("Failed to get response from BioStudies API")
+        print("Unable to read from arrays data file.")
 
     return adfs
 
