@@ -13,8 +13,15 @@ spec:
       tty: true
       securityContext:
         privileged: true
+      volumeMounts:
+        - name: docker-socket
+          mountPath: /var/run/docker.sock
     - name: kubectl
       image: bitnami/kubectl:latest
       command:
         - cat
       tty: true
+  volumes:
+    - name: docker-socket
+      hostPath:
+        path: /var/run/docker.sock
