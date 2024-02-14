@@ -11,7 +11,7 @@ pipeline {
         DOCKER_REGISTRY = 'quay.io'
         DOCKER_REPO = 'ebigxa/submissions-biostudies-api' // Replace with your Quay repository
         DOCKER_IMAGE_TAG = "${DOCKER_REPO}:${BUILD_NUMBER}"
-        DOCKER_IMAGE_LATEST = "${DOCKER_REPO}:latest"
+        DOCKER_IMAGE_LATEST = "latest"
     }
 
     stages {
