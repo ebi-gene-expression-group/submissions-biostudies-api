@@ -20,7 +20,7 @@ pipeline {
                 container('docker') {
                     script {
                         docker.build(DOCKER_IMAGE_TAG, '-f Dockerfile .')
-                        docker.tag(DOCKER_IMAGE_TAG, DOCKER_IMAGE_LATEST)
+                        docker.image(DOCKER_IMAGE_TAG).tag(DOCKER_IMAGE_LATEST)
                     }
                 }
             }
