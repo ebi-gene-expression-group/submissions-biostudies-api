@@ -11,7 +11,7 @@ pipeline {
         DOCKER_REGISTRY = 'quay.io'
         DOCKER_REPO = 'ebigxa/submissions-biostudies-api' // Replace with your Quay repository
         DOCKER_IMAGE_TAG = "${DOCKER_REPO}:${BUILD_NUMBER}"
-        DOCKER_IMAGE_LATEST = "latest"
+        DOCKER_IMAGE_LATEST = "${DOCKER_REPO}:latest"
     }
 
     stages {
@@ -20,7 +20,7 @@ pipeline {
                 container('docker') {
                     script {
                         docker.build(DOCKER_IMAGE_TAG, '-f Dockerfile .')
-                        docker.image(DOCKER_IMAGE_TAG).tag(DOCKER_IMAGE_LATEST)
+                        docker.image(DOCKER_IMAGE_TAG).tag("latest")
                     }
                 }
             }
@@ -31,8 +31,8 @@ pipeline {
                 container('docker') {
                     script {
                         docker.withRegistry('https://quay.io', 'EBIGXA_QUAY_IO_TOKEN') {
-                            docker.push(DOCKER_IMAGE_TAG)
-                            docker.push(DOCKER_IMAGE_LATEST)
+                            docker.image(DOCKER_IMAGE_TAG).push()
+                            docker.image(DOCKER_IMAGE_LATEST).push()
                         }
                     }
                 }
